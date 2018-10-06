@@ -10,7 +10,7 @@ Docker and docker-compose must be installed in order to run the stack.
 
 Running the stack for the first time:
 ```sh
-$ git clone https://github.com/mbuella/octobercms-laravel.git myoctoberapp
+$ git clone https://github.com/mbuella/octobercms-docker.git myoctoberapp
 $ cd myoctoberapp
 $ export APACHE_UID=$(id -u)
 $ export APACHE_GID=$(id -g)
