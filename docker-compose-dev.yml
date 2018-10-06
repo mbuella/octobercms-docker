@@ -13,6 +13,8 @@ services:
       - october_app:/var/www/html
       - ./themes:/var/www/html/themes
       - ./plugins:/var/www/html/plugins
+      - ./vendor:/var/www/html/vendor     
+      - ./config:/var/www/html/config 
     restart: always
     ports:
       - "80:8080"

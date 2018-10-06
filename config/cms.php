@@ -36,7 +36,7 @@ return [
     |
     */
 
-    'backendUri' => 'backend',
+    'backendUri' => 'admin',
 
     /*
     |--------------------------------------------------------------------------
@@ -141,7 +141,7 @@ return [
     |
     */
 
-    'enableRoutesCache' => false,
+    'enableRoutesCache' => env('ROUTES_CACHE', false),
 
     /*
     |--------------------------------------------------------------------------
@@ -181,7 +181,7 @@ return [
     |
     */
 
-    'enableAssetCache' => false,
+    'enableAssetCache' => env('ASSET_CACHE', false),
 
     /*
     |--------------------------------------------------------------------------
@@ -296,7 +296,7 @@ return [
     |
     */
 
-    'linkPolicy' => 'detect',
+    'linkPolicy' => env('LINK_POLICY', 'detect'),
 
     /*
     |--------------------------------------------------------------------------
@@ -307,7 +307,7 @@ return [
     |
     */
 
-    'defaultMask' => ['file' => null, 'folder' => null],
+    'defaultMask' => ['file' => '777', 'folder' => '777'],
 
     /*
     |--------------------------------------------------------------------------
@@ -332,7 +332,7 @@ return [
     |
     */
 
-    'enableCsrfProtection' => true,
+    'enableCsrfProtection' => env('ENABLE_CSRF', true),
 
     /*
     |--------------------------------------------------------------------------

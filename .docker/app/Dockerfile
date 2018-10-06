@@ -51,12 +51,18 @@ RUN chown "$APACHE_RUN_USER" /var/run/apache2
 COPY ./ /var/www/html
 RUN find /var/www/html -type d -exec chown "$APACHE_RUN_USER" {} \;
 RUN find /var/www/html -type f -exec chown "$APACHE_RUN_USER" {} \;
+COPY ./docker/app/scripts/entrypoint /usr/local/bin
+RUN chmod +x /usr/local/bin/entrypoint
 RUN mv .env.october .env
 
 # Set port
-ADD ./docker-config/app/apache/000-default.conf /etc/apache2/sites-available                 
+ADD ./docker/app/config/apache/000-default.conf /etc/apache2/sites-available                 
 RUN ln -sf /etc/apache2/sites-available/000-default.conf /etc/apache2/sites-enabled/000-default.conf
-ADD ./docker-config/app/apache/ports.conf /etc/apache2
+ADD ./docker/app/config/apache/ports.conf /etc/apache2
 
 # Change to the app user
 USER "$APACHE_RUN_USER"
+
+ENTRYPOINT ["entrypoint"]
+
+CMD ["apache2-foreground"]

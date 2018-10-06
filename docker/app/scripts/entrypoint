@@ -1,0 +1,9 @@
+#!/bin/bash
+set -e
+
+composer install --prefer-dist
+php artisan october:up
+echo "APP_KEY=$(php artisan key:generate --show)" >> .env
+php artisan cache:clear
+
+exec "$@"

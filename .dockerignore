@@ -21,7 +21,7 @@ nbproject
 
 # docker files
 docker-compose.yml
-/docker
+/.docker
 .dockerignore
 .env.docker
 

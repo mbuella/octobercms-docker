@@ -16,7 +16,7 @@ return [
     |
     */
 
-    'debug' => true,
+    'debug' => env('APP_DEBUG', true),
 
     /*
     |--------------------------------------------------------------------------
@@ -41,7 +41,7 @@ return [
     |
     */
 
-    'url' => 'http://localhost',
+    'url' => env('APP_URL', 'http://local.october.app'),
 
     /*
     |--------------------------------------------------------------------------
@@ -93,7 +93,7 @@ return [
     |
     */
 
-    'key' => 'base64:Kr/k1Dq+uXd1y5DS9InN7SDbUZDTQomUqgiWZFN6Gvo=',
+    'key' => env('APP_KEY', ''),
 
     'cipher' => 'AES-256-CBC',
 
