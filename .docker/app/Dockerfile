@@ -1,10 +1,10 @@
 FROM php:7.1-apache
 LABEL maintainer="Marlon Buella <marlon.b.buella@gmail.com>"
 
-ENV APACHE_RUN_USER=www-data
-ENV APACHE_RUN_GROUP=www-data
+ARG APACHE_RUN_USER=web-user
+ARG APACHE_RUN_GROUP=${APACHE_RUN_USER}
 ARG APACHE_UID=0
-ARG APACHE_GID=0
+ARG APACHE_GID=${APACHE_GID}
 
 #PRE-PHP-INSTALL
 RUN apt-get update \
@@ -42,8 +42,36 @@ RUN a2enmod rewrite
 
 WORKDIR /var/www/html
 
-RUN usermod -u "$APACHE_UID" "$APACHE_RUN_USER"
-RUN groupmod -g "$APACHE_GID" "$APACHE_RUN_GROUP"
+# user management
+
+RUN if id "$APACHE_RUN_USER" >/dev/null 2>&1 ; then \
+	echo "*** THE USER INSIDE THE CONTAINER WILL BE USED ***" ; \
+	if [ $(id -u "$APACHE_RUN_USER") != "$APACHE_UID" ]; then \
+		echo "*** SETTING THE UID FOR THE USER ***" ; \
+		usermod -u "$APACHE_UID" "$APACHE_RUN_USER" ; \
+	fi ; \
+else \
+	echo "CREATING NEW USER INSIDE THE CONTAINER" ; \
+	useradd -u "$APACHE_UID" "$APACHE_RUN_USER" ; \
+fi
+
+RUN if [ $(getent group "$APACHE_RUN_GROUP") ] ; then \
+	echo "*** THE GROUP INSIDE THE CONTAINER WILL BE USED ***" ; \
+	if [ $(getent group "$APACHE_RUN_GROUP" | awk -F: '{printf "%d\n", $3}') != "$APACHE_GID" ] ; then \
+		echo "*** SETTING THE GID FOR THE GROUP ***" ; \		
+		groupmod -g "$APACHE_GID" "$APACHE_RUN_GROUP" ; \
+	fi ; \
+	if [ $(id -Gn "$APACHE_RUN_USER"|grep -c "$APACHE_RUN_GROUP") != 1 ] ; then \
+		usermod -a -G "$APACHE_RUN_GROUP" "$APACHE_RUN_USER" ; \
+	fi ; \
+else \
+	echo "CREATING NEW GROUP INSIDE THE CONTAINER" ; \
+	groupadd -g "$APACHE_GID" "$APACHE_RUN_GROUP" ; \
+	usermod -a -G "$APACHE_RUN_GROUP" "$APACHE_RUN_USER" ; \
+fi
+
+#RUN usermod -u "$APACHE_UID" "$APACHE_RUN_USER"
+#RUN groupmod -g "$APACHE_GID" "$APACHE_RUN_GROUP"
 RUN chown "$APACHE_RUN_USER" /var/run/apache2
 #RUN chown "$APACHE_RUN_USER" /var/www/html
 
@@ -63,6 +91,6 @@ ADD ./docker/app/config/apache/ports.conf /etc/apache2
 # Change to the app user
 USER "$APACHE_RUN_USER"
 
-ENTRYPOINT ["entrypoint"]
+#ENTRYPOINT ["entrypoint"]
 
 CMD ["apache2-foreground"]

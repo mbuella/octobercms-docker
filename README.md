@@ -12,9 +12,14 @@ Running the stack for the first time:
 ```sh
 $ git clone https://github.com/mbuella/octobercms-docker.git myoctoberapp
 $ cd myoctoberapp
+$ cp .env.docker .env
 $ export APACHE_UID=$(id -u)
 $ export APACHE_GID=$(id -g)
 $ docker-compose up -d
+```
+Accessing shell inside the web container
+```sh
+$ docker exec -it october_app /bin/bash
 ```
 Stopping the stack:
 ```sh
