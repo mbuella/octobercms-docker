@@ -52,7 +52,7 @@ RUN if id "$APACHE_RUN_USER" >/dev/null 2>&1 ; then \
 	fi ; \
 else \
 	echo "CREATING NEW USER INSIDE THE CONTAINER" ; \
-	useradd -u "$APACHE_UID" "$APACHE_RUN_USER" ; \
+	useradd --non-unique -u "$APACHE_UID" "$APACHE_RUN_USER" ; \
 fi
 
 RUN if [ $(getent group "$APACHE_RUN_GROUP") ] ; then \
@@ -66,7 +66,7 @@ RUN if [ $(getent group "$APACHE_RUN_GROUP") ] ; then \
 	fi ; \
 else \
 	echo "CREATING NEW GROUP INSIDE THE CONTAINER" ; \
-	groupadd -g "$APACHE_GID" "$APACHE_RUN_GROUP" ; \
+	groupadd --non-unique -g "$APACHE_GID" "$APACHE_RUN_GROUP" ; \
 	usermod -a -G "$APACHE_RUN_GROUP" "$APACHE_RUN_USER" ; \
 fi
 
@@ -91,6 +91,6 @@ ADD ./docker/app/config/apache/ports.conf /etc/apache2
 # Change to the app user
 USER "$APACHE_RUN_USER"
 
-#ENTRYPOINT ["entrypoint"]
+ENTRYPOINT ["entrypoint"]
 
 CMD ["apache2-foreground"]
