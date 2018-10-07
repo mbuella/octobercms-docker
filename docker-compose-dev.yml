@@ -7,6 +7,8 @@ services:
       context: .
       dockerfile: ./.docker/app/Dockerfile
       args:
+        APACHE_RUN_USER: ${APACHE_RUN_USER}
+        APACHE_RUN_GROUP: ${APACHE_RUN_GROUP}
         APACHE_UID: ${APACHE_UID}
         APACHE_GID: ${APACHE_GID}
     volumes:
